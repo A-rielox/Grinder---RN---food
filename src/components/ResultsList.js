@@ -1,19 +1,34 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+// prettier-ignore
+import { View, Text, StyleSheet, FlatList, TouchableOpacity} from "react-native";
+import { withNavigation } from "react-navigation";
 
 import ResultsDetail from "./ResultsDetail";
+//                                       ||
+//                                       \/ me lo inyecta aqui withNavigation
+const ResultsList = ({ title, results, navigation }) => {
+   if (!results.length) return null;
 
-const ResultsList = ({ title, results }) => {
    return (
       <View style={styles.container}>
          <Text style={styles.title}>{title}</Text>
+
          <FlatList
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={results}
             keyExtractor={(result) => result.id}
             renderItem={({ item }) => {
-               return <ResultsDetail result={item} />;
+               return (
+                  <TouchableOpacity
+                     onPress={
+                        () =>
+                           navigation.navigate("ResultsShow", { id: item.id }) // manda la info a "ResultsShow" como un param
+                     }
+                  >
+                     <ResultsDetail result={item} />
+                  </TouchableOpacity>
+               );
             }}
          />
       </View>
@@ -32,4 +47,4 @@ const styles = StyleSheet.create({
    },
 });
 
-export default ResultsList;
+export default withNavigation(ResultsList);
